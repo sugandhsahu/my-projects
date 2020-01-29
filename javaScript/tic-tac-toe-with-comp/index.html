@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link  rel="stylesheet" type="text/css" href="../../dependies/fontawesome-free-5.12.0-web/css/all.min.css">
+    <link  rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="table">
+        <h1>Tic Tac Toe</h1>
+        <h3>Your Trun</h3>
+        <table class="table-items">
+            <tr>
+                <td id="one"></td>
+                <td id="two" class="vert"></td>
+                <td id="three"></td>
+            </tr>
+            <tr>
+                <td id="four" class="hori"></td>
+                <td id="five" class="vert hori"></td>
+                <td id="six" class="hori"></td>
+            </tr>
+            <tr>
+                <td id="seven"></td>
+                <td id="eight" class="vert"></td>
+                <td id="nine"></td>
+            </tr>
+        </table>
+        <h2><i class="fas fa-undo-alt"></i></h2>
+    </div>
+    <div class="winner"></div>
+    <div class="pyro hidden">
+        <div class="before"></div>
+        <div class="after"></div>
+    </div>
+    <script src="../../dependies/jquery-3.4.1.min.js"></script>
+    <script src="javaScript.js"></script>
+</body>
+</html>
