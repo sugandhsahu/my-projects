@@ -1,0 +1,41 @@
+<div class="main">
+  <div class="input" (click)="inputClicked()">
+    <ng-container *ngIf="selectedValues && selectedValues.length">
+      <ng-container *ngFor="let label of selectedValues">
+        {{label.label}},
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="!selectedValues || !selectedValues.length">{{placeHolderText}}</ng-container>
+  </div>
+  <div class="dropdown" *ngIf="showDropdown">
+    <div *ngIf="enableSearch" class="search">
+      <input placeholder="Search" (keyup)="search($event)">
+    </div>
+    <div class="selectAll" *ngIf="selectedItems.size === 0" (click)="onSelectAll('selectAll')">
+      <i class="far fa-square"></i> <span> Select All</span>
+    </div>
+    <div class="selectAll" *ngIf="selectedItems.size < data.length && selectedItems.size !== 0" (click)="onSelectAll('selectAll')">
+      <i class="fas fa-minus-square"></i> <span> Select All</span>
+    </div>
+    <div class="selectAll" *ngIf="selectedItems.size === data.length"
+      (click)="onSelectAll('unSelectAll')">
+      <i class="fas fa-check-square"></i><span> UnSelect All</span>
+    </div>
+    <div class="dropdown-items">
+      <ng-container *ngIf="filteredData && filteredData.length">
+        <cdk-virtual-scroll-viewport itemSize="50">
+          <ng-container *cdkVirtualFor="let item of filteredData">
+            <div class="item" (click)="itemSelected(item)">
+              <i *ngIf="!selectedItems || !selectedItems.has(item.id)" class="checkbox-dropdown far fa-square"></i>
+              <i *ngIf="selectedItems && selectedItems.has(item.id)" class="checkbox-dropdown fas fa-check-square"></i>
+              {{item.label}}
+            </div>
+          </ng-container>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+      <ng-container *ngIf="!filteredData || !filteredData.length">
+        <div class="noData">No Data Available</div>
+      </ng-container>
+    </div>
+  </div>
+</div>

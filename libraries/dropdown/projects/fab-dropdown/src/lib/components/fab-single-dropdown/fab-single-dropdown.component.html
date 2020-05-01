@@ -1,0 +1,23 @@
+<div class="main">
+  <div class="input" (click)="inputClicked()">
+    {{selectedValue ? selectedValue.label : placeHolderText}}
+  </div>
+
+  <div class="dropdown" *ngIf="showDropdown">
+    <div *ngIf="enableSearch" class="search">
+      <input placeholder="Search" (keyup)="search($event)">
+    </div>
+    <div class="dropdown-items">
+      <ng-container *ngIf="filteredData && filteredData.length">
+        <cdk-virtual-scroll-viewport itemSize="50">
+          <ng-container *cdkVirtualFor="let item of filteredData">
+            <div class="item" (click)="itemSelected(item)">{{item.label}}</div>
+          </ng-container>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+      <ng-container *ngIf="!filteredData || !filteredData.length">
+        <div class="noData">No Data Available</div>
+      </ng-container>
+    </div>
+  </div>
+</div>

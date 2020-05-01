@@ -1,5 +1,4 @@
 let text = 0;
-let placeLeft = ['#one', '#two', '#three', '#four', '#five', '#six', '#seven', '#eight', '#nine'];
 let places = ['#one', '#two', '#three', '#four', '#five', '#six', '#seven', '#eight', '#nine'];
 let matrix = {};
 $('td').on('click', (y) => {
@@ -10,7 +9,6 @@ $('td').on('click', (y) => {
 			$('#' + className).html('<i class="fas fa-circle"></i>')
 			$('h3').html('Computer\'s Turn');
 			matrix['#' + className] = 'o';
-			placeLeft.splice(placeLeft.indexOf('#' + className), 1);
 			computerTurn();
 		}
 	}
@@ -42,6 +40,7 @@ $('h2').on('click', (y) => {
 	$('.winner').removeClass('showwinner');
 	$('.pyro').addClass('hidden');
 	$('h3').html('Your Turn');
+	matrix = {};
 });
 
 checkWinner = (x) => {
@@ -65,71 +64,6 @@ checkWinner = (x) => {
 	}
 	return won;
 }
-
-let copyPlaceLeft;
-
-// computerTurn = (x) => {
-//   copyPlaceLeft = JSON.parse(JSON.stringify(placeLeft));
-//   let arrcomp = {};
-
-//   console.log('arcomp' , arrcomp)
-//   let win = 0;
-//   let winIndex;
-//   Object.keys(arrcomp).forEach(index => {
-//     if (!arrcomp[index] && !win) {
-//       win = 1;
-//       winIndex = index;
-//     }
-//   });
-//   if (winIndex) {
-//     text = 0;
-//     placeLeft.splice( placeLeft.indexOf(winIndex), 1 );
-//     matrix[winIndex] = 'x';
-//     $(winIndex).html('<i class="fas fa-times"></i>');
-//     $('h3').html('Your Turn');
-//   } else {
-
-//   }
-// }
-
-// checkPlace = (x) => {
-//   copyPlaceLeft = x;
-//   copyPlaceLeft.forEach(place => {
-//     let arruser = {};
-//     copyPlaceLeft.forEach(copy => {
-//       let copyMatrix = JSON.parse(JSON.stringify(matrix));
-//       if (copy !== place) {
-//         copyMatrix[copy] = 'o';
-//         copyPlaceLeft.splice( copyPlaceLeft.indexOf(copy), 1 );
-//         if (copyPlaceLeft.length > 0) {
-//           checkPlace(copyPlaceLeft)
-//         } else {
-//           if(checkWinnerWithMatrex(copyMatrix)) {
-//             if (checkWinnerWithMatrex(copyMatrix) === 'o') {
-//               arruser[copy] = -1;
-//             } else {
-//               arruser[copy] = -1;
-//             }
-//           } else {
-//             arruser[copy] = 0;
-//           }
-//         }
-//       }
-//     });
-//     console.log('arruser' , arruser);
-//     let flag = 0;
-//     Object.values(arruser).forEach(el => {
-//       if (el < 0) {
-//         flag = 1;
-//       }
-//     });
-//     if (flag) {
-//       arrcomp[place] = -1;
-//     } else {
-//       arrcomp[place] = 0;
-//     }
-//   });
-// }
 
 checkWinnerWithMatrex = (x) => {
 	let won = 0;
@@ -159,20 +93,27 @@ getBoardState = (currentState, playerTurn, place) => {
 }
 
 algo = (state, playerTurn, level) => {
-	let optimalMove = 10;
+
 	if (checkWinnerWithMatrex(state)) {
 		return checkWinnerWithMatrex(state) === 'x' ? 1 : -1;
 	}
-	if (!copyPlaceLeft.length) {
+	const movesResult = [];
+	let placesleftnew = [];
+	let optimalMove = playerTurn === 'x' ? -Infinity : Infinity;
+	places.forEach(item => {
+		if (!(item in state)) {
+			placesleftnew.push(item);
+		}
+	});
+
+	if (!placesleftnew.length) {
 		return 0;
 	}
-	const movesResult = [];
-	let placesleftnew = JSON.parse(JSON.stringify(copyPlaceLeft));
 	placesleftnew.forEach(element => {
-		state = getBoardState(state, playerTurn, element);
-		copyPlaceLeft.splice(copyPlaceLeft.indexOf(element), 1); 
-		playerTurn = playerTurn === 'o' ? 'x' : 'o';
-		const bstmove = algo(JSON.parse(JSON.stringify(state)), playerTurn, false);
+		let newState = JSON.parse(JSON.stringify(state));
+		newState = getBoardState(newState, playerTurn, element);
+		const currentTurn = playerTurn === 'o' ? 'x' : 'o';
+		const bstmove = algo(newState, currentTurn, false);
 		if (playerTurn === 'x') {
 			optimalMove = Math.max(optimalMove, bstmove);
 		} else {
@@ -189,24 +130,25 @@ algo = (state, playerTurn, level) => {
 	return optimalMove;
 }
 
-computerTurn = (x) => {
-  copyPlaceLeft = JSON.parse(JSON.stringify(placeLeft));
+computerTurn = () => {
 	let state = JSON.parse(JSON.stringify(matrix));
-	const result = algo(JSON.parse(JSON.stringify(state)), 'x', true);
-  console.log(result);
-  let winIndex = result[0];
-  result.forEach(index => {
-    if (index['result'] > winIndex['result']) {
-      winIndex = index;
-    }
-  });
-  if (winIndex) {
-    text = 0;
-    placeLeft.splice( placeLeft.indexOf(winIndex['index']), 1 );
-    matrix[winIndex['index']] = 'x';
-    $(winIndex['index']).html('<i class="fas fa-times"></i>');
-    $('h3').html('Your Turn');
-  } else {
 
-  }
+	const result = algo(JSON.parse(JSON.stringify(state)), 'x', true);
+	if (result) {
+		let winIndex = result[0];
+		result.forEach(index => {
+			if (index['result'] > winIndex['result']) {
+				winIndex = index;
+			}
+		});
+		text = 0;
+		matrix[winIndex['index']] = 'x';
+		$(winIndex['index']).html('<i class="fas fa-times"></i>');
+		$('h3').html('Your Turn');
+	} else {
+		$('h3').html('Match Draw');
+		$('.winner').addClass('showwinner');
+		$('.winner').html('Match Draw');
+	}
+
 }
