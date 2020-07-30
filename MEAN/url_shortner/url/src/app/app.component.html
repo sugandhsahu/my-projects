@@ -1,0 +1,28 @@
+<h1>URL Shrinker</h1>
+<form>
+  <label for="fullUrl">URL</label>
+  <input type="url" #url name="fullUrl" id="fullUrl">
+  <button type="submit" (click)="submit(url.value)">Shrink</button>
+</form>
+<table *ngIf="urlsData && urlsData.shortUrls && urlsData.shortUrls.length">
+  <thead>
+    <tr>
+      <th>
+        Full URL
+      </th>
+      <th>
+        Short URL
+      </th>
+      <th>
+        Clicks
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of urlsData.shortUrls">
+      <td>{{data.full}}</td>
+      <td>{{data.short}}</td>
+      <td>{{data.clicks}}</td>
+    </tr>
+  </tbody>
+</table>
